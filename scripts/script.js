@@ -21,13 +21,13 @@ function mainEffect() {
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
   let paper = []
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < data.length; i += 4) {
+  for (let i = data.length / 2; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
     if (colorDiff(PAPER_COLOR, pixelColor) < TRESHOLD) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
       const nextPixelColor = [data[i], data[i + 1], data[i + 2]];
       if (colorDiff(PAPER_COLOR, nextPixelColor) < TRESHOLD * 100) {
-        paper.push({ x: (i + 1 / 4) % canvas.width, y: Math.floor((i + 1 / 4) / canvas.width) });
+        paper.push({ x: ((i + 1) / 4) % canvas.width, y: Math.floor(((i + 1) / 4) / canvas.width) });
         i += 4;
       }
     }
