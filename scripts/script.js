@@ -13,7 +13,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
 
 const BODY_COLOR = [108, 73, 68]
 const PAPER_COLOR = [0, 0, 0]
-const TRESHOLD = 20;
+const TRESHOLD = 50;
 const GAP_TRESHOLD = 3
 let lastY = 0
 let pointOnLine = 0
@@ -36,8 +36,7 @@ function mainEffect() {
   for (let i = 0; i < paper.length; i += 2) {
     removedYs[paper[i].y] = removedYs[paper[i].y] == undefined ? 1 : removedYs[paper[i].y] + 1
   }
-
-  paper = paper.filter((p) => removedYs[p.y] > 100);
+  paper = paper.filter((p) => removedYs[p.y] > 80);
   for (let i = 0; i < paper.length; i++) {
     ctx.fillStyle = 'green';
     ctx.beginPath();
