@@ -11,38 +11,67 @@ navigator.mediaDevices.getUserMedia({ video: true })
     alert('Error: ' + err);
   });
 
-const BODY_COLOR = [108, 73, 68]
-const PAPER_COLOR = [0, 0, 0]
-const TRESHOLD = 50;
-const GAP_TRESHOLD = 3
+const BODY_COLOR = [113, 80, 27]
+// const PAPER_COLOR = [154, 120, 36] // DAY
+let PAPER_COLOR = [189, 181, 82] // LIGHT
+// const PAPER_COLOR = [91, 66, 27] // DARK
+const COLOR_TRESHOLD = 10;
+const HEIGHT_TRESHOLD = 20
 let lastY = 0
 let pointOnLine = 0
 function mainEffect() {
+  video.videoHeight = video.videoHeight / 2;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
   let paper = []
+  let isNext = 0
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   for (let i = data.length / 2; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
-    if (colorDiff(PAPER_COLOR, pixelColor) < TRESHOLD) {
+    if (colorDiff(PAPER_COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 50) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
-      const nextPixelColor = [data[i], data[i + 1], data[i + 2]];
-      if (colorDiff(PAPER_COLOR, nextPixelColor) < TRESHOLD * 100) {
-        paper.push({ x: ((i + 1) / 4) % canvas.width, y: Math.floor(((i + 1) / 4) / canvas.width) });
-        i += 4;
-      }
+      isNext = 1
+      continue
     }
+    isNext = 0
   }
-  let removedYs = {}
-  for (let i = 0; i < paper.length; i += 2) {
-    removedYs[paper[i].y] = removedYs[paper[i].y] == undefined ? 1 : removedYs[paper[i].y] + 1
+  let ys = paper.map(p => p.y)
+  let avgY = ys.reduce((a, b) => a + b, 0) / ys.length
+
+  paper = paper.filter(p => Math.abs(p.y - avgY) < HEIGHT_TRESHOLD)
+  let xs = paper.map(p => p.x)
+  xs = xs.filter((x, i) => xs.indexOf(x) === i)
+  let minX = Math.min(...xs)
+  let maxX = Math.max(...xs)
+  let fingersAmmount = 3
+  let fingerWidth = (maxX - minX) / fingersAmmount
+  let fingers = []
+  let colors = []
+  for (let i = 0; i < fingersAmmount; i++) {
+    let finger = averagePos(paper.filter(p => p.x > minX + i * fingerWidth && p.x < minX + (i + 1) * fingerWidth))
+    fingers.push(finger)
+    if (!finger.length) continue
+    let color = ctx.getImageData(finger.x, finger.y, 1, 1).data
+    colors[0] = (color[0] + colors[0]) / 2
+    colors[1] = (color[1] + colors[1]) / 2
+    colors[2] = (color[2] + colors[2]) / 2
+    PAPER_COLOR = colors
   }
-  paper = paper.filter((p) => removedYs[p.y] > 80);
-  for (let i = 0; i < paper.length; i++) {
-    ctx.fillStyle = 'green';
+  // for (let i = 0; i < paper.length; i++) {
+  //   ctx.fillStyle = 'green';
+  //   ctx.beginPath();
+  //   ctx.arc(paper[i].x, paper[i].y, 2, 0, Math.PI * 2);
+  //   ctx.fill()
+  // }
+  for (let i = 0; i < fingers.length; i++) {
+    ctx.fillStyle = 'red';
     ctx.beginPath();
-    ctx.arc(paper[i].x, paper[i].y, 1, 0, Math.PI * 2);
+    ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
     ctx.fill()
   }
+
+
   requestAnimationFrame(mainEffect);
 
 }
