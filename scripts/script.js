@@ -11,10 +11,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
     alert('Error: ' + err);
   });
 
-const PAPER_COLOR = [0, 0, 0] // DAY
-// const PAPER_COLOR = [154, 120, 36] // DAY
-// let PAPER_COLOR = [189, 181, 82] // LIGHT
-// const PAPER_COLOR = [91, 66, 27] // DARK
+const COLOR = [0, 0, 0]
 const COLOR_TRESHOLD = 20;
 const HEIGHT_TRESHOLD = 80
 let lastY = 0
@@ -29,7 +26,7 @@ function mainEffect() {
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   for (let i = 3 * data.length / 4; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
-    if (colorDiff(PAPER_COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 50) {
+    if (colorDiff(COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 50) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
       isNext = 1
       continue
@@ -42,28 +39,44 @@ function mainEffect() {
   paper = paper.filter(p => Math.abs(p.y - avgY) < HEIGHT_TRESHOLD)
   let xs = paper.map(p => p.x)
   xs = xs.filter((x, i) => xs.indexOf(x) === i)
-  let minX = Math.min(...xs)
-  let maxX = Math.max(...xs)
-  let fingersAmmount = 5
-  let fingerWidth = (maxX - minX) / fingersAmmount
+  let fingersXLocs = splitFingers(xs)
+  fingersXLocs = fingersXLocs.filter(f => f.length > 10)
+  let fingersLocs = filterLocs(fingersXLocs, paper)
+  // console.log(fingersXLocs, fingersLocs)
   let fingers = []
-  let colors = []
-  for (let i = 0; i < fingersAmmount; i++) {
-    let finger = averagePos(paper.filter(p => p.x > minX + i * fingerWidth && p.x < minX + (i + 1) * fingerWidth))
+  for (let i = 0; i < fingersLocs.length; i++) {
+    let finger = averagePos(fingersLocs[i])
     fingers.push(finger)
     if (!finger.length) continue
     let color = ctx.getImageData(finger.x, finger.y, 1, 1).data
     colors[0] = (color[0] + colors[0]) / 2
     colors[1] = (color[1] + colors[1]) / 2
     colors[2] = (color[2] + colors[2]) / 2
-    PAPER_COLOR = colors
+    COLOR = colors
   }
-  // for (let i = 0; i < paper.length; i++) {
-  //   ctx.fillStyle = 'green';
-  //   ctx.beginPath();
-  //   ctx.arc(paper[i].x, paper[i].y, 2, 0, Math.PI * 2);
-  //   ctx.fill()
+
+  // let minX = Math.min(...xs)
+  // let maxX = Math.max(...xs)
+  // let fingersAmmount = 5
+  // let fingerWidth = (maxX - minX) / fingersAmmount 
+  // let fingers = []
+  // let colors = []
+  // for (let i = 0; i < fingersAmmount; i++) {
+  //   let finger = averagePos(paper.filter(p => p.x > minX + i * fingerWidth && p.x < minX + (i + 1) * fingerWidth))
+  //   fingers.push(finger)
+  //   if (!finger.length) continue
+  //   let color = ctx.getImageData(finger.x, finger.y, 1, 1).data
+  //   colors[0] = (color[0] + colors[0]) / 2
+  //   colors[1] = (color[1] + colors[1]) / 2
+  //   colors[2] = (color[2] + colors[2]) / 2
+  //   COLOR = colors
   // }
+  for (let i = 0; i < paper.length; i++) {
+    ctx.fillStyle = 'green';
+    ctx.beginPath();
+    ctx.arc(paper[i].x, paper[i].y, 2, 0, Math.PI * 2);
+    ctx.fill()
+  }
   for (let i = 0; i < fingers.length; i++) {
     // write finger index on canvas
     // ctx.fillStyle = 'red';

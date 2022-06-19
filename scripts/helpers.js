@@ -15,3 +15,27 @@ function averagePos(positions) {
   }
   return { x: sumX / positions.length, y: sumY / positions.length };
 }
+
+function splitFingers(xs) {
+  xs.sort((a, b) => a - b)
+  let fingers = []
+  let finger = []
+  for (let i = 0; i < xs.length; i++) {
+    if (xs[i] + 1 !== xs[i + 1]) {
+      fingers.push(finger)
+      finger = []
+    } else {
+      finger.push(xs[i])
+    }
+  }
+  return fingers
+}
+
+function filterLocs(xLocs, locs) {
+  let filteredLocs = []
+  for (let i = 0; i < xLocs.length; i++) {
+    let filtered = locs.filter((loc) => xLocs[i].includes(loc.x))
+    filteredLocs.push(filtered)
+  }
+  return filteredLocs
+}
