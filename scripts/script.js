@@ -11,12 +11,12 @@ navigator.mediaDevices.getUserMedia({ video: true })
     alert('Error: ' + err);
   });
 
-const BODY_COLOR = [113, 80, 27]
+const PAPER_COLOR = [0, 0, 0] // DAY
 // const PAPER_COLOR = [154, 120, 36] // DAY
-let PAPER_COLOR = [189, 181, 82] // LIGHT
+// let PAPER_COLOR = [189, 181, 82] // LIGHT
 // const PAPER_COLOR = [91, 66, 27] // DARK
-const COLOR_TRESHOLD = 10;
-const HEIGHT_TRESHOLD = 20
+const COLOR_TRESHOLD = 20;
+const HEIGHT_TRESHOLD = 80
 let lastY = 0
 let pointOnLine = 0
 function mainEffect() {
@@ -27,7 +27,7 @@ function mainEffect() {
   let paper = []
   let isNext = 0
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  for (let i = data.length / 2; i < data.length; i += 4) {
+  for (let i = 3 * data.length / 4; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
     if (colorDiff(PAPER_COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 50) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
@@ -44,7 +44,7 @@ function mainEffect() {
   xs = xs.filter((x, i) => xs.indexOf(x) === i)
   let minX = Math.min(...xs)
   let maxX = Math.max(...xs)
-  let fingersAmmount = 3
+  let fingersAmmount = 5
   let fingerWidth = (maxX - minX) / fingersAmmount
   let fingers = []
   let colors = []
@@ -65,10 +65,14 @@ function mainEffect() {
   //   ctx.fill()
   // }
   for (let i = 0; i < fingers.length; i++) {
-    ctx.fillStyle = 'red';
-    ctx.beginPath();
-    ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
-    ctx.fill()
+    // write finger index on canvas
+    // ctx.fillStyle = 'red';
+    // ctx.beginPath();
+    // ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
+    // ctx.fill()
+    ctx.fillStyle = 'white';
+    ctx.font = '20px Arial';
+    ctx.fillText(i + 1, fingers[i].x, fingers[i].y);
   }
 
 
