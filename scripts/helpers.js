@@ -13,16 +13,17 @@ function averagePos(positions) {
     sumX += positions[i].x;
     sumY += positions[i].y;
   }
-  return { x: sumX / positions.length, y: sumY / positions.length };
+  return { x: sumX / positions.length, y: sumY / positions.length, isDown: true };
 }
 
-function splitFingers(xs) {
+function splitFingers(xs, threshold) {
   xs.sort((a, b) => a - b)
   let fingers = []
   let finger = []
   for (let i = 0; i < xs.length; i++) {
     if (xs[i] + 1 !== xs[i + 1]) {
-      fingers.push(finger)
+      if (finger.length > threshold)
+        fingers.push(finger)
       finger = []
     } else {
       finger.push(xs[i])
@@ -38,4 +39,9 @@ function filterLocs(xLocs, locs) {
     filteredLocs.push(filtered)
   }
   return filteredLocs
+}
+
+function isNear(pos1, pos2, threshold) {
+  if (!pos1 || !pos2) return false
+  return Math.abs(pos1.x - pos2.x) < threshold && Math.abs(pos1.y - pos2.y) < threshold
 }
