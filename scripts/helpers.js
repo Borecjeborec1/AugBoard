@@ -6,14 +6,22 @@ function colorDiff(color1, color2) {
   );
 }
 
-function averagePos(positions) {
+function averagePos(positions, ind, based) {
   let sumX = 0;
   let sumY = 0;
   for (let i = 0; i < positions.length; i++) {
     sumX += positions[i].x;
     sumY += positions[i].y;
   }
-  return { x: sumX / positions.length, y: sumY / positions.length, isDown: true };
+  if (based.length) {
+    for (let i in based) {
+      if (isNearX(based[i], { x: sumX / positions.length, y: sumY / positions.length }, 3)) {
+        console.log(based[i], "isnear", { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: ind })
+        return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: based[i].index };
+      }
+    }
+  }
+  return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: ind };
 }
 
 function splitFingers(xs, threshold) {
@@ -41,7 +49,12 @@ function filterLocs(xLocs, locs) {
   return filteredLocs
 }
 
-function isNear(pos1, pos2, threshold) {
+function isNearY(pos1, pos2, threshold) {
   if (!pos1 || !pos2) return false
-  return Math.abs(pos1.x - pos2.x) < threshold && Math.abs(pos1.y - pos2.y) < threshold
+  return Math.abs(pos1.y - pos2.y) < threshold
+}
+
+function isNearX(pos1, pos2, threshold) {
+  if (!pos1 || !pos2) return false
+  return Math.abs(pos1.x - pos2.x) < threshold
 }
