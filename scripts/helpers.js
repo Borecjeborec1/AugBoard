@@ -1,3 +1,7 @@
+function closest(arr, x) {
+  return arr.sort((a, b) => Math.abs(x - a.x) - Math.abs(x - b.x))[0];
+}
+
 function colorDiff(color1, color2) {
   return Math.sqrt(
     Math.pow(color1[0] - color2[0], 2) +
@@ -14,12 +18,7 @@ function averagePos(positions, ind, based) {
     sumY += positions[i].y;
   }
   if (based.length) {
-    for (let i in based) {
-      if (isNearX(based[i], { x: sumX / positions.length, y: sumY / positions.length }, 3)) {
-        console.log(based[i], "isnear", { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: ind })
-        return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: based[i].index };
-      }
-    }
+    return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: closest(based, sumX / positions.length).index };
   }
   return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: ind };
 }
@@ -57,4 +56,9 @@ function isNearY(pos1, pos2, threshold) {
 function isNearX(pos1, pos2, threshold) {
   if (!pos1 || !pos2) return false
   return Math.abs(pos1.x - pos2.x) < threshold
+}
+
+function isNear(pos1, pos2, threshold) {
+  if (!pos1 || !pos2) return false
+  return Math.abs(pos1.x - pos2.x) < threshold && Math.abs(pos1.y - pos2.y) < threshold
 }

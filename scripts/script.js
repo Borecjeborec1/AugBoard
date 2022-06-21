@@ -32,10 +32,7 @@ function mainEffect() {
   let paper = []
   let isNext = 0
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let testLine = []
   for (let i = 0; i < data.length; i += 4) {
-    if (testLine.length < 30)
-      testLine.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) })
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
     if (colorDiff(PAPER_COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 50) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
@@ -51,16 +48,6 @@ function mainEffect() {
     return requestAnimationFrame(mainEffect)
   }
 
-  for (
-    let i = 0;
-    i < testLine.length;
-    i++
-  ) {
-    ctx.fillStyle = 'red';
-    ctx.beginPath();
-    ctx.arc(testLine[i].x, testLine[i].y, 1, 0, Math.PI * 2);
-    ctx.fill()
-  }
 
   let ys = paper.map(p => p.y)
   let avgY = ys.reduce((a, b) => a + b, 0) / ys.length
@@ -95,10 +82,10 @@ function mainEffect() {
   let cyclist = basedPositions.length ? basedPositions : fingers
   for (let i = 0; i < cyclist.length; i++) {
     ctx.fillStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(cyclist[i].x, cyclist[i].y, 10, 0, Math.PI * 2);
-    ctx.fill()
+    ctx.font = '20px Arial';
+    ctx.fillText(cyclist[i].index, cyclist[i].x, cyclist[i].y);
     if (!fingers[i]) continue
+
     ctx.fillStyle = 'red';
     ctx.beginPath();
     ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
