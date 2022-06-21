@@ -13,7 +13,8 @@ navigator.mediaDevices.getUserMedia({ video: true })
 const VIDEO_SCALE = .3
 // const PAPER_COLOR = [0, 0, 0]
 const PAPER_COLOR = [203, 77, 67]
-const COLOR_TRESHOLD = 13;
+// const PAPER_COLOR = [166, 39, 51]
+const COLOR_TRESHOLD = 20;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MIN = 15
 const FINGER_UP_DISTANCE = 20
@@ -93,7 +94,7 @@ function mainEffect() {
 
     ctx.fillStyle = 'white';
     ctx.font = '20px Arial';
-    ctx.fillText(cyclist[i].index, fingers[i].x, fingers[i].y);
+    ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
   }
   if (basedPositions.length) {
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
