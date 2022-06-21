@@ -82,9 +82,9 @@ function mainEffect() {
 
   let cyclist = basedPositions.length ? basedPositions : fingers
   for (let i = 0; i < cyclist.length; i++) {
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    ctx.fillText(cyclist[i].index, cyclist[i].x, cyclist[i].y);
+    // ctx.fillStyle = 'black';
+    // ctx.font = '20px Arial';
+    // ctx.fillText(cyclist[i].index, cyclist[i].x, cyclist[i].y);
     if (!fingers[i]) continue
 
     ctx.fillStyle = 'red';
@@ -98,10 +98,15 @@ function mainEffect() {
   }
   if (basedPositions.length) {
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
+    fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
+      if (fingers[i].index !== basedPositions[i].index) {
+        console.log(fingers[i], basedPositions[i])
+        continue
+      }
       if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
         if (!basedPositions[i].isDown) {
-          console.log("finger " + i + " tapped", fingers[i], basedPositions[i])
+          console.log("finger " + basedPositions[i].index + " tapped", fingers[i], basedPositions[i])
           basedPositions[i].isDown = true
         }
       } else {
