@@ -1,4 +1,5 @@
-function closest(arr, x) {
+function closest(arr, x, ind) {
+  if (ind === 4 || ind === 0) return { index: ind }
   return arr.sort((a, b) => Math.abs(x - a.x) - Math.abs(x - b.x))[0];
 }
 
@@ -18,7 +19,7 @@ function averagePos(positions, ind, based) {
     sumY += positions[i].y;
   }
   if (based.length) {
-    return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: closest(based, sumX / positions.length).index };
+    return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: closest(based, sumX / positions.length, ind).index };
   }
   return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: ind };
 }
@@ -61,4 +62,12 @@ function isNearX(pos1, pos2, threshold) {
 function isNear(pos1, pos2, threshold) {
   if (!pos1 || !pos2) return false
   return Math.abs(pos1.x - pos2.x) < threshold && Math.abs(pos1.y - pos2.y) < threshold
+}
+
+function getKey(pos, basedPos, switchWidth) {
+  switch (pos.x) {
+    case basedPos.x:
+      console.log("based")
+      break
+  }
 }

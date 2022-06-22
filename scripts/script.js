@@ -100,10 +100,9 @@ function mainEffect() {
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
-      if (fingers[i].index !== basedPositions[i].index) {
-        console.log(fingers[i], basedPositions[i])
+      if (fingers[i].index !== basedPositions[i].index)
         continue
-      }
+
       if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
         if (!basedPositions[i].isDown) {
           console.log("finger " + basedPositions[i].index + " tapped", fingers[i], basedPositions[i])
