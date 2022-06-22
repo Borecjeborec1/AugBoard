@@ -10,14 +10,17 @@ navigator.mediaDevices.getUserMedia({ video: true })
   .catch((err) => {
     alert('Error: ' + err);
   });
-const VIDEO_SCALE = .3
 // const PAPER_COLOR = [0, 0, 0]
 const PAPER_COLOR = [203, 77, 67]
 // const PAPER_COLOR = [166, 39, 51]
-const COLOR_TRESHOLD = 20;
+const COLOR_TRESHOLD = 25;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MIN = 15
 const FINGER_UP_DISTANCE = 20
+const LEFT_POINTER_FINGER_INDEX = 6
+const RIGHT_POINTER_FINGER_INDEX = 2
+
+
 let basedPositions = []
 let canGetBase = false
 setTimeout(() => {
@@ -96,7 +99,9 @@ function mainEffect() {
     ctx.font = '20px Arial';
     ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
   }
-  if (basedPositions.length) {
+  let switchWidth
+  if (basedPositions.length > 2) {
+    switchWidth = Math.abs(basedPositions[1].x - basedPositions[2].x)
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
@@ -105,6 +110,7 @@ function mainEffect() {
 
       if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
         if (!basedPositions[i].isDown) {
+          console.log(getKey(fingers[i], basedPositions[i], switchWidth))
           console.log("finger " + basedPositions[i].index + " tapped", fingers[i], basedPositions[i])
           basedPositions[i].isDown = true
         }

@@ -65,9 +65,11 @@ function isNear(pos1, pos2, threshold) {
 }
 
 function getKey(pos, basedPos, switchWidth) {
-  switch (pos.x) {
-    case basedPos.x:
-      console.log("based")
-      break
-  }
+  if (pos.x > basedPos.x - switchWidth / 2 && pos.x < basedPos.x + switchWidth / 2)
+    console.log("J")
+  else if (pos.x > basedPos.x - switchWidth / 2 + switchWidth && pos.x < basedPos.x + switchWidth / 2 + switchWidth)
+    console.log("H")
+  else if (pos.x > basedPos.x - switchWidth / 2 + 2 * switchWidth && pos.x < basedPos.x + switchWidth / 2 + 2 * switchWidth)
+    console.log("G")
+  // console.log(switchWidth, basedPos)
 }
