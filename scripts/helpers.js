@@ -64,12 +64,14 @@ function isNear(pos1, pos2, threshold) {
   return Math.abs(pos1.x - pos2.x) < threshold && Math.abs(pos1.y - pos2.y) < threshold
 }
 
-function getKey(pos, basedPos, switchWidth) {
-  if (pos.x > basedPos.x - switchWidth / 2 && pos.x < basedPos.x + switchWidth / 2)
-    console.log("J")
-  else if (pos.x > basedPos.x - switchWidth / 2 + switchWidth && pos.x < basedPos.x + switchWidth / 2 + switchWidth)
-    console.log("H")
-  else if (pos.x > basedPos.x - switchWidth / 2 + 2 * switchWidth && pos.x < basedPos.x + switchWidth / 2 + 2 * switchWidth)
-    console.log("G")
-  // console.log(switchWidth, basedPos)
+function getKey(pos, jKey, switchWidth) {
+  let resKey = "Did not find a key"
+  if (pos.x > jKey.x - switchWidth / 2 && pos.x < jKey.x + switchWidth / 2)
+    resKey = ("J")
+  else if (pos.x > jKey.x - switchWidth / 2 + switchWidth && pos.x < jKey.x + switchWidth / 2 + switchWidth)
+    resKey = ("H")
+  else if (pos.x > jKey.x - switchWidth / 2 + 2 * switchWidth && pos.x < jKey.x + switchWidth / 2 + 2 * switchWidth)
+    resKey = ("G")
+
+  return resKey
 }

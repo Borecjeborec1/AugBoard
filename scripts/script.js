@@ -102,6 +102,7 @@ function mainEffect() {
   let switchWidth
   if (basedPositions.length > 2) {
     switchWidth = Math.abs(basedPositions[1].x - basedPositions[2].x)
+    let jKey = { x: basedPositions[2].x, y: basedPositions[2].y }
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
@@ -110,7 +111,7 @@ function mainEffect() {
 
       if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
         if (!basedPositions[i].isDown) {
-          console.log(getKey(fingers[i], basedPositions[i], switchWidth))
+          console.log(getKey(fingers[i], jKey, switchWidth))
           console.log("finger " + basedPositions[i].index + " tapped", fingers[i], basedPositions[i])
           basedPositions[i].isDown = true
         }
