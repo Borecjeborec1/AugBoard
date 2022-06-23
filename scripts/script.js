@@ -17,8 +17,7 @@ const COLOR_TRESHOLD = 25;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MIN = 15
 const FINGER_UP_DISTANCE = 20
-const LEFT_POINTER_FINGER_INDEX = 6
-const RIGHT_POINTER_FINGER_INDEX = 2
+const RIGHT_POINTER_FINGER_INDEX = 0
 
 
 let basedPositions = []
@@ -102,17 +101,14 @@ function mainEffect() {
   let switchWidth
   if (basedPositions.length > 2) {
     switchWidth = Math.abs(basedPositions[1].x - basedPositions[2].x)
-    let jKey = { x: basedPositions[2].x, y: basedPositions[2].y }
+    let jKey = { x: basedPositions[RIGHT_POINTER_FINGER_INDEX].x, y: basedPositions[RIGHT_POINTER_FINGER_INDEX].y }
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
-      if (fingers[i].index !== basedPositions[i].index)
-        continue
 
       if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
         if (!basedPositions[i].isDown) {
-          console.log(getKey(fingers[i], jKey, switchWidth))
-          console.log("finger " + basedPositions[i].index + " tapped", fingers[i], basedPositions[i])
+          console.log("finger " + basedPositions[i].index + " tapped the key: ", getKey(fingers[i], jKey, switchWidth), fingers[i], basedPositions[i])
           basedPositions[i].isDown = true
         }
       } else {
