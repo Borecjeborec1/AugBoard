@@ -34,7 +34,13 @@ function splitFingers(xs, threshold) {
         fingers.push(finger)
       finger = []
     } else {
-      finger.push(xs[i])
+      if (finger.length < 30)
+        finger.push(xs[i])
+      else {
+        if (finger.length > threshold)
+          fingers.push(finger)
+        finger = []
+      }
     }
   }
   return fingers
