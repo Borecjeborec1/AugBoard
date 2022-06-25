@@ -10,27 +10,25 @@ navigator.mediaDevices.getUserMedia({ video: true })
   .catch((err) => {
     alert('Error: ' + err);
   });
-// const PAPER_COLOR = [0, 0, 0]
 const PAPER_COLOR = [203, 77, 67]
-// const PAPER_COLOR = [166, 39, 51]
 const COLOR_TRESHOLD = 25;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MIN = 15
 const FINGER_UP_DISTANCE = 20
+const FINGER_TAP_TRESHOLD = 5
 const RIGHT_POINTER_FINGER_INDEX = 0
 
 
 let basedPositions = []
 let canGetBase = false
-setTimeout(() => {
+document.addEventListener("click", () => {
   canGetBase = true
-  console.log("initialized")
 }, 5000)
-let sy = 340
+const SOURCE_Y = 340
 function mainEffect() {
   canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight - sy;
-  ctx.drawImage(video, 0, sy, video.videoWidth, video.videoHeight - sy, 0, 0, canvas.width, canvas.height)
+  canvas.height = video.videoHeight - SOURCE_Y;
+  ctx.drawImage(video, 0, SOURCE_Y, video.videoWidth, video.videoHeight - SOURCE_Y, 0, 0, canvas.width, canvas.height)
 
   let paper = []
   let isNext = 0
@@ -107,7 +105,7 @@ function mainEffect() {
     for (let i = 0; i < idk; i++) {
 
       if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
-        if (!basedPositions[i].isDown) {
+        if (!basedPositions[i].isDown && isNearY(basedPositions[i], fingers[i], FINGER_TAP_TRESHOLD)) {
           console.log("finger " + basedPositions[i].index + " tapped the key: ", getKey(fingers[i], jKey, switchWidth), fingers[i], basedPositions[i])
           basedPositions[i].isDown = true
         }
@@ -120,6 +118,8 @@ function mainEffect() {
   if (canGetBase) {
     basedPositions = fingers
     canGetBase = false
+    console.log("initialized")
+    console.log(basedPositions)
   }
 
   requestAnimationFrame(mainEffect);
