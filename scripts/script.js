@@ -101,7 +101,6 @@ function mainEffect() {
     for (let i = 0; i < (fingers.length < basedPositions.length ? fingers.length : basedPositions.length); i++) {
       if (fingers[i].y > basedPositions[i].y - 10) {
         let filteredKb = Object.fromEntries(Object.entries(keyboardPositions).filter(([k, value]) => fingers[i].y < value.y + 6 && fingers[i].y > value.y - 6))
-        console.log(filteredKb)
         let key = findClosestKey(filteredKb, fingers[i])
         if (key == undefined) {
           console.log("key not found")
