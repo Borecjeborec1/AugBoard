@@ -87,7 +87,6 @@ function mapKeyboard(based) {
     kb["c"] = { x: based[2].x + distance * 2, y: based[2].y - 10 }
     kb["x"] = { x: based[2].x + distance * 2.5, y: based[2].y - 10 }
     kb["y"] = { x: based[2].x + distance * 3, y: based[2].y - 10 }
-
   }
   return kb
 }
