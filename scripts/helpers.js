@@ -63,6 +63,7 @@ function mapKeyboard(based) {
     kb["l"] = { x: based[0].x, y: based[2].y }
     kb["k"] = { x: based[1].x, y: based[2].y }
     kb["j"] = { x: based[2].x, y: based[2].y }
+
     let distance = Math.abs(kb["k"].x - kb["j"].x)
 
     kb["h"] = { x: based[2].x + distance * 1, y: based[2].y }
