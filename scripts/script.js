@@ -10,8 +10,9 @@ navigator.mediaDevices.getUserMedia({ video: true })
   .catch((err) => {
     alert('Error: ' + err);
   });
-const PAPER_COLOR = [203, 77, 67]
-const COLOR_TRESHOLD = 25;
+// const PAPER_COLOR = [203, 77, 67]
+let PAPER_COLOR = [97, 21, 34]
+const COLOR_TRESHOLD = 35;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MIN = 15
 const FINGER_UP_DISTANCE = 20
@@ -21,21 +22,29 @@ const RIGHT_POINTER_FINGER_INDEX = 0
 
 let basedPositions = []
 let canGetBase = false
-document.addEventListener("click", () => {
-  canGetBase = true
-}, 5000)
-const SOURCE_Y = 340
+canvas.addEventListener("click", (e) => {
+
+  PAPER_COLOR = ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data
+  console.log(ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data)
+  setTimeout(() => {
+    canGetBase = true
+  }, 500)
+})
+
+const SOURCE_Y = 300
+let keyboardPositions = { test: "test" }
 function mainEffect() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight - SOURCE_Y;
   ctx.drawImage(video, 0, SOURCE_Y, video.videoWidth, video.videoHeight - SOURCE_Y, 0, 0, canvas.width, canvas.height)
+
 
   let paper = []
   let isNext = 0
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   for (let i = 0; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
-    if (colorDiff(PAPER_COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 50) {
+    if (colorDiff(PAPER_COLOR, pixelColor) < COLOR_TRESHOLD + isNext * 35) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
       isNext = 1
       continue
@@ -66,6 +75,7 @@ function mainEffect() {
     let finger = averagePos(fingersLocs[i], i, basedPositions)
     fingers.push(finger)
     if (!finger.length) continue
+
     let color = ctx.getImageData(finger.x, finger.y, 1, 1).data
     colors[0] = (color[0] + colors[0]) / 2
     colors[1] = (color[1] + colors[1]) / 2
@@ -82,9 +92,6 @@ function mainEffect() {
 
   let cyclist = basedPositions.length ? basedPositions : fingers
   for (let i = 0; i < cyclist.length; i++) {
-    // ctx.fillStyle = 'black';
-    // ctx.font = '20px Arial';
-    // ctx.fillText(cyclist[i].index, cyclist[i].x, cyclist[i].y);
     if (!fingers[i]) continue
 
     ctx.fillStyle = 'red';
@@ -96,22 +103,21 @@ function mainEffect() {
     ctx.font = '20px Arial';
     ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
   }
-  let switchWidth
   if (basedPositions.length > 2) {
-    switchWidth = Math.abs(basedPositions[1].x - basedPositions[2].x)
-    let jKey = { x: basedPositions[RIGHT_POINTER_FINGER_INDEX].x, y: basedPositions[RIGHT_POINTER_FINGER_INDEX].y }
     let idk = fingers.length < basedPositions.length ? fingers.length : basedPositions.length
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
-
-      if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
-        if (!basedPositions[i].isDown && isNearY(basedPositions[i], fingers[i], FINGER_TAP_TRESHOLD)) {
-          console.log("finger " + basedPositions[i].index + " tapped the key: ", getKey(fingers[i], jKey, switchWidth), fingers[i], basedPositions[i])
-          basedPositions[i].isDown = true
-        }
-      } else {
-        basedPositions[i].isDown = false
+      if (fingers[i].y > basedPositions[i].y + 10) {
+        console.log(findClosestKey(keyboardPositions, fingers[i]) + " is down")
       }
+      // if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
+      //   if (!basedPositions[i].isDown && isNearY(basedPositions[i], fingers[i], FINGER_TAP_TRESHOLD)) {
+      //     console.log("finger " + basedPositions[i].index + " tapped the key: ", getKey(fingers[i], jKey, switchWidth), fingers[i], basedPositions[i])
+      //     basedPositions[i].isDown = true
+      //   }
+      // } else {
+      //   basedPositions[i].isDown = false
+      // }
     }
   }
 
@@ -120,6 +126,8 @@ function mainEffect() {
     canGetBase = false
     console.log("initialized")
     console.log(basedPositions)
+    keyboardPositions = mapKeyboard(basedPositions)
+    console.log(keyboardPositions)
   }
 
   requestAnimationFrame(mainEffect);
