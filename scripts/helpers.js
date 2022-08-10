@@ -102,13 +102,13 @@ function mapKeyboard(based) {
     kb["l"] = { x: based[0].x, y: based[0].y }
     kb["k"] = { x: based[1].x, y: based[1].y }
     kb["j"] = { x: based[2].x, y: based[2].y }
-    let distance = Math.abs(kb["k"].x - kb["j"])
-    kb["h"] = { x: based[2].x + distance, y: based[2].y }
-    kb["g"] = { x: based[2].x + distance * 1, y: based[2].y }
-    kb["f"] = { x: based[2].x + distance * 2, y: based[2].y }
-    kb["d"] = { x: based[2].x + distance * 3, y: based[2].y }
-    kb["s"] = { x: based[2].x + distance * 4, y: based[2].y }
-    kb["a"] = { x: based[2].x + distance * 5, y: based[2].y }
+    let distance = Math.abs(kb["k"].x - kb["j"].x)
+    kb["h"] = { x: based[2].x + distance * 1, y: based[2].y }
+    kb["g"] = { x: based[2].x + distance * 2, y: based[2].y }
+    kb["f"] = { x: based[2].x + distance * 3, y: based[2].y }
+    kb["d"] = { x: based[2].x + distance * 4, y: based[2].y }
+    kb["s"] = { x: based[2].x + distance * 5, y: based[2].y }
+    kb["a"] = { x: based[2].x + distance * 6, y: based[2].y }
   }
   return kb
 }
@@ -116,11 +116,9 @@ function mapKeyboard(based) {
 function findClosestKey(keyboard, position) {
   let output = undefined;
   let score = 0;
-  console.log("keyboard: " + keyboard)
   for (let keyIndex in keyboard) {
     let key = keyboard[keyIndex];
-    console.log("key: " + key)
-    let currentScore = Math.abs(key.x - position.x) + Math.abs(key.y - position.y);
+    let currentScore = Math.abs(key.x - position.x);
     if ((!output) || (score > currentScore)) {
       output = keyIndex;
       score = currentScore;

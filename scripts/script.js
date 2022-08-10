@@ -12,7 +12,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
   });
 // const PAPER_COLOR = [203, 77, 67]
 let PAPER_COLOR = [97, 21, 34]
-const COLOR_TRESHOLD = 35;
+const COLOR_TRESHOLD = 25;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MIN = 15
 const FINGER_UP_DISTANCE = 20
@@ -108,7 +108,10 @@ function mainEffect() {
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < idk; i++) {
       if (fingers[i].y > basedPositions[i].y + 10) {
-        console.log(findClosestKey(keyboardPositions, fingers[i]) + " is down")
+        let key = findClosestKey(keyboardPositions, fingers[i])
+        console.log(key + " is down")
+        console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
+        console.log("Key position: " + keyboardPositions[key].x + " " + keyboardPositions[key].y)
       }
       // if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
       //   if (!basedPositions[i].isDown && isNearY(basedPositions[i], fingers[i], FINGER_TAP_TRESHOLD)) {
