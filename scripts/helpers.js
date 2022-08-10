@@ -55,47 +55,6 @@ function filterLocs(xLocs, locs) {
   return filteredLocs
 }
 
-function isNearY(pos1, pos2, threshold) {
-  if (!pos1 || !pos2) return false
-  return Math.abs(pos1.y - pos2.y) < threshold
-}
-
-function isNearX(pos1, pos2, threshold) {
-  if (!pos1 || !pos2) return false
-  return Math.abs(pos1.x - pos2.x) < threshold
-}
-
-function isNear(pos1, pos2, threshold) {
-  if (!pos1 || !pos2) return false
-  return Math.abs(pos1.x - pos2.x) < threshold && Math.abs(pos1.y - pos2.y) < threshold
-}
-
-function getKey(pos, jKey, switchWidth) {
-  let resKey = "Did not find a key"
-  if (pos.x > jKey.x - (switchWidth / 2) - 2 * switchWidth && pos.x < jKey.x + (switchWidth / 2) - 2 * switchWidth)
-    resKey = ("L")
-  else if (pos.x > jKey.x - (switchWidth / 2) - switchWidth && pos.x < jKey.x + (switchWidth / 2) - switchWidth)
-    resKey = ("K")
-  else if (pos.x > jKey.x - (switchWidth / 2) && pos.x < jKey.x + (switchWidth / 2))
-    resKey = ("J")
-  else if (pos.x > jKey.x - (switchWidth / 2) + switchWidth && pos.x < jKey.x + (switchWidth / 2) + switchWidth)
-    resKey = ("H")
-  else if (pos.x > jKey.x - (switchWidth / 2) + 2 * switchWidth && pos.x < jKey.x + (switchWidth / 2) + 2 * switchWidth)
-    resKey = ("G")
-  else if (pos.x > jKey.x - (switchWidth / 2) + 3 * switchWidth && pos.x < jKey.x + (switchWidth / 2) + 3 * switchWidth)
-    resKey = ("F")
-  else if (pos.x > jKey.x - (switchWidth / 2) + 4 * switchWidth && pos.x < jKey.x + (switchWidth / 2) + 4 * switchWidth)
-    resKey = ("D")
-  else if (pos.x > jKey.x - (switchWidth / 2) + 5 * switchWidth && pos.x < jKey.x + (switchWidth / 2) + 5 * switchWidth)
-    resKey = ("S")
-  else if (pos.x > jKey.x - (switchWidth / 2) + 6 * switchWidth && pos.x < jKey.x + (switchWidth / 2) + 6 * switchWidth)
-    resKey = ("A")
-
-  return resKey
-
-}
-
-
 function mapKeyboard(based) {
   let kb = {}
   if (based.length == 3) {

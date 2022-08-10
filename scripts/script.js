@@ -113,14 +113,6 @@ function mainEffect() {
         console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
         console.log("Key position: " + keyboardPositions[key].x + " " + keyboardPositions[key].y)
       }
-      // if (isNearY(basedPositions[i], fingers[i], FINGER_UP_DISTANCE)) {
-      //   if (!basedPositions[i].isDown && isNearY(basedPositions[i], fingers[i], FINGER_TAP_TRESHOLD)) {
-      //     console.log("finger " + basedPositions[i].index + " tapped the key: ", getKey(fingers[i], jKey, switchWidth), fingers[i], basedPositions[i])
-      //     basedPositions[i].isDown = true
-      //   }
-      // } else {
-      //   basedPositions[i].isDown = false
-      // }
     }
   }
 
