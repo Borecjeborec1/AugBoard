@@ -13,7 +13,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
   });
 
 
-const COLOR_TRESHOLD = 25;
+const COLOR_TRESHOLD = 30;
 const HEIGHT_TRESHOLD = 80
 const PAPER_SIZE_MAX = 15
 const SOURCE_Y = 300
@@ -26,6 +26,8 @@ let keyboardPositions = { test: "test" }
 let lastKey = ""
 
 canvas.addEventListener("click", (e) => {
+  console.log("paper color: " + paperColor)
+  console.log("clicked color: " + ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data)
   paperColor = ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data
   localStorage.setItem("paperColor", JSON.stringify(paperColor))
   setTimeout(() => {
@@ -43,7 +45,7 @@ function mainEffect() {
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   for (let i = 0; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
-    if (colorDiff(paperColor, pixelColor) < COLOR_TRESHOLD + isNext * 20) {
+    if (colorDiff(paperColor, pixelColor) < COLOR_TRESHOLD /*+ isNext * 20*/) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
       isNext = 1
       continue
