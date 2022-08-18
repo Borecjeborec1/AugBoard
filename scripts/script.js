@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let video = document.createElement('video');
+
 navigator.mediaDevices.getUserMedia({ video: true })
   .then((stream) => {
     video.srcObject = stream;
@@ -10,15 +11,13 @@ navigator.mediaDevices.getUserMedia({ video: true })
   .catch((err) => {
     alert('Error: ' + err);
   });
-// const PAPER_COLOR = [203, 77, 67]
-let PAPER_COLOR = [97, 21, 34]
+
+
 const COLOR_TRESHOLD = 25;
 const HEIGHT_TRESHOLD = 80
-const PAPER_SIZE_MIN = 15
-const FINGER_UP_DISTANCE = 20
-const FINGER_TAP_TRESHOLD = 5
-const RIGHT_POINTER_FINGER_INDEX = 0
+const PAPER_SIZE_MAX = 15
 
+let PAPER_COLOR = [97, 21, 34]
 
 let basedPositions = []
 let canGetBase = false
@@ -65,7 +64,7 @@ function mainEffect() {
 
   let xs = paper.map(p => p.x)
   xs = xs.filter((x, i) => xs.indexOf(x) === i)
-  let fingersXLocs = splitFingers(xs, PAPER_SIZE_MIN)
+  let fingersXLocs = splitFingers(xs, PAPER_SIZE_MAX)
   fingersXLocs = fingersXLocs.filter(f => f.length > 10)
 
   let fingersLocs = filterLocs(fingersXLocs, paper)
