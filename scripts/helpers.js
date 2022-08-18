@@ -37,8 +37,7 @@ function splitFingers(xs, threshold) {
       if (finger.length < 30)
         finger.push(xs[i])
       else {
-        if (finger.length > threshold)
-          fingers.push(finger)
+        fingers.push(finger)
         finger = []
       }
     }
