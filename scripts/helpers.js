@@ -60,6 +60,7 @@ function filterLocs(xLocs, locs) {
 function mapKeyboard(based) {
   let kb = {}
   if (based.length == 3) {
+
     kb["l"] = { x: based[0].x, y: based[0].y }
     kb["k"] = { x: based[1].x, y: based[1].y }
     kb["j"] = { x: based[2].x, y: based[2].y }
