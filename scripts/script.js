@@ -1,3 +1,4 @@
+const outputHeading = document.getElementById('output');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let video = document.createElement('video');
@@ -23,7 +24,6 @@ let paperColor = localStorage.getItem("paperColor") ? JSON.parse(localStorage.ge
 let basedPositions = []
 let canGetBase = false
 let keyboardPositions = { test: "test" }
-let lastKey = ""
 
 canvas.addEventListener("click", (e) => {
   console.log("paper color: " + paperColor)
@@ -45,7 +45,7 @@ function mainEffect() {
   const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
   for (let i = 0; i < data.length; i += 4) {
     const pixelColor = [data[i], data[i + 1], data[i + 2]];
-    if (colorDiff(paperColor, pixelColor) < COLOR_TRESHOLD + isNext * 40) {
+    if (colorDiff(paperColor, pixelColor) < Math.pow(COLOR_TRESHOLD + isNext * 20, 2)) {
       paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
       isNext = 1
       continue
@@ -76,26 +76,26 @@ function mainEffect() {
     fingers.push(finger)
     if (!finger.length) continue
   }
+  // for (let i = 0; i < paper.length; i += 3) {
+  //   ctx.fillStyle = 'green';
+  //   ctx.beginPath();
+  //   ctx.arc(paper[i].x, paper[i].y, 3, 0, Math.PI * 2);
+  //   ctx.fill()
+  // }
 
-  for (let i = 0; i < paper.length; i += 3) {
-    ctx.fillStyle = 'green';
-    ctx.beginPath();
-    ctx.arc(paper[i].x, paper[i].y, 3, 0, Math.PI * 2);
-    ctx.fill()
-  }
 
+  // for (let i = 0; i < (basedPositions.length ? basedPositions.length : fingers.length); i++) {
+  //   if (!fingers[i]) continue
+  //   ctx.fillStyle = 'red';
+  //   ctx.beginPath();
+  //   ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
+  //   ctx.fill()
 
-  for (let i = 0; i < (basedPositions.length ? basedPositions.length : fingers.length); i++) {
-    if (!fingers[i]) continue
-    ctx.fillStyle = 'red';
-    ctx.beginPath();
-    ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
-    ctx.fill()
+  //   ctx.fillStyle = 'white';
+  //   ctx.font = '20px Arial';
+  //   ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
+  // }
 
-    ctx.fillStyle = 'white';
-    ctx.font = '20px Arial';
-    ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
-  }
   if (basedPositions.length > 2) {
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < (fingers.length < basedPositions.length ? fingers.length : basedPositions.length); i++) {
@@ -105,14 +105,18 @@ function mainEffect() {
           console.log("key not found")
           continue
         }
-        if (key !== lastKey) {
+        console.log()
+        if (!basedPositions[i].isDown) {
+          outputHeading.innerText += key
           console.log(key + " is down")
-          console.log(lastKey + " was last down")
-          lastKey = key
           console.log("Finger: " + JSON.stringify(fingers[i]))
-          console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
-          console.log("Key position: " + keyboardPositions[key].x + " " + keyboardPositions[key].y)
+          // console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
+          // console.log("Key position: " + keyboardPositions[key].x + " " + keyboardPositions[key].y)
+          basedPositions[i].isDown = true
         }
+      }
+      else {
+        basedPositions[i].isDown = false
       }
     }
   }
@@ -125,8 +129,6 @@ function mainEffect() {
     keyboardPositions = mapKeyboard(basedPositions)
     console.log(keyboardPositions)
   }
-
   requestAnimationFrame(mainEffect);
 
 }
-

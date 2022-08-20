@@ -4,14 +4,14 @@ function closest(arr, x, ind) {
 }
 
 function colorDiff(color1, color2) {
-  return Math.sqrt(
-    Math.pow(color1[0] - color2[0], 2) +
-    Math.pow(color1[1] - color2[1], 2) +
-    Math.pow(color1[2] - color2[2], 2)
-  );
-  // return (Math.pow(color1[0] - color2[0], 2) +
+  // return Math.sqrt(
+  //   Math.pow(color1[0] - color2[0], 2) +
   //   Math.pow(color1[1] - color2[1], 2) +
-  //   Math.pow(color1[2] - color2[2], 2))
+  //   Math.pow(color1[2] - color2[2], 2)
+  // );
+  return (Math.pow(color1[0] - color2[0], 2) +
+    Math.pow(color1[1] - color2[1], 2) +
+    Math.pow(color1[2] - color2[2], 2))
 }
 
 function averagePos(positions, ind, based) {
@@ -22,9 +22,9 @@ function averagePos(positions, ind, based) {
     sumY += positions[i].y;
   }
   if (based.length) {
-    return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: closest(based, sumX / positions.length, ind).index };
+    return { x: sumX / positions.length, y: sumY / positions.length, index: closest(based, sumX / positions.length, ind).index };
   }
-  return { x: sumX / positions.length, y: sumY / positions.length, isDown: true, index: ind };
+  return { x: sumX / positions.length, y: sumY / positions.length, index: ind };
 }
 
 function splitFingers(xs, threshold) {
