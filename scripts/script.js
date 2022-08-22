@@ -110,8 +110,6 @@ function mainEffect() {
         console.log(fingers[i].x, keyboardPositions[key].x, "x")
         console.log(fingers[i].y, keyboardPositions[key].y, "y")
         if (fingers[i].x + fingers[i].y < keyboardPositions[key].x + keyboardPositions[key].y + 5 && fingers[i].x + fingers[i].y > keyboardPositions[key].x + keyboardPositions[key].y - 5) {
-
-          console.log()
           if (!basedPositions[i].isDown) {
             outputHeading.innerText += key
             console.log(key + " is down")
