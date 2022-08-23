@@ -106,8 +106,7 @@ function mainEffect() {
           console.log("key not found")
           continue
         }
-        console.log(key)
-        console.log("moved down")
+        console.log(key + " moved down")
         console.log(fingers[i].x, keyboardPositions[key].x, "x")
         console.log(fingers[i].y, keyboardPositions[key].y, "y")
         if (fingers[i].x + fingers[i].y < keyboardPositions[key].x + keyboardPositions[key].y + 5 && fingers[i].x + fingers[i].y > keyboardPositions[key].x + keyboardPositions[key].y - 5) {
