@@ -60,17 +60,33 @@ function filterLocs(xLocs, locs) {
 function mapKeyboard(based) {
   let kb = {}
   if (based.length == 3) {
-
-    kb["l"] = { x: based[0].x, y: based[0].y }
-    kb["k"] = { x: based[1].x, y: based[1].y }
+    kb["l"] = { x: based[0].x, y: based[2].y }
+    kb["k"] = { x: based[1].x, y: based[2].y }
     kb["j"] = { x: based[2].x, y: based[2].y }
     let distance = Math.abs(kb["k"].x - kb["j"].x)
+
     kb["h"] = { x: based[2].x + distance * 1, y: based[2].y }
     kb["g"] = { x: based[2].x + distance * 2, y: based[2].y }
     kb["f"] = { x: based[2].x + distance * 3, y: based[2].y }
     kb["d"] = { x: based[2].x + distance * 4, y: based[2].y }
     kb["s"] = { x: based[2].x + distance * 5, y: based[2].y }
     kb["a"] = { x: based[2].x + distance * 6, y: based[2].y }
+
+    kb["p"] = { x: based[0].x + distance * .5, y: based[2].y + 10 }
+    kb["o"] = { x: based[1].x + distance * .5, y: based[2].y + 10 }
+    kb["i"] = { x: based[2].x + distance * .5, y: based[2].y + 10 }
+    kb["u"] = { x: based[2].x + distance * 1, y: based[2].y + 10 }
+    kb["z"] = { x: based[2].x + distance * 1.5, y: based[2].y + 10 }
+    kb["t"] = { x: based[2].x + distance * 2, y: based[2].y + 10 }
+
+    kb["m"] = { x: based[2].x - distance * .5, y: based[2].y - 10 }
+    kb["n"] = { x: based[2].x + distance * .5, y: based[2].y - 10 }
+    kb["b"] = { x: based[2].x + distance * 1, y: based[2].y - 10 }
+    kb["v"] = { x: based[2].x + distance * 1.5, y: based[2].y - 10 }
+    kb["c"] = { x: based[2].x + distance * 2, y: based[2].y - 10 }
+    kb["x"] = { x: based[2].x + distance * 2.5, y: based[2].y - 10 }
+    kb["y"] = { x: based[2].x + distance * 3, y: based[2].y - 10 }
+
   }
   return kb
 }

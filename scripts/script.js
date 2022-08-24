@@ -14,7 +14,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
   });
 
 
-const COLOR_TRESHOLD = 25;
+const COLOR_TRESHOLD = 35;
 const HEIGHT_TRESHOLD = 50
 const PAPER_SIZE_MAX = 15
 const SOURCE_Y = 300
@@ -76,43 +76,52 @@ function mainEffect() {
     fingers.push(finger)
     if (!finger.length) continue
   }
-  // for (let i = 0; i < paper.length; i += 3) {
-  //   ctx.fillStyle = 'green';
-  //   ctx.beginPath();
-  //   ctx.arc(paper[i].x, paper[i].y, 3, 0, Math.PI * 2);
-  //   ctx.fill()
-  // }
+  for (let i = 0; i < paper.length; i += 3) {
+    ctx.fillStyle = 'green';
+    ctx.beginPath();
+    ctx.arc(paper[i].x, paper[i].y, 3, 0, Math.PI * 2);
+    ctx.fill()
+  }
 
 
-  // for (let i = 0; i < (basedPositions.length ? basedPositions.length : fingers.length); i++) {
-  //   if (!fingers[i]) continue
-  //   ctx.fillStyle = 'red';
-  //   ctx.beginPath();
-  //   ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
-  //   ctx.fill()
+  for (let i = 0; i < (basedPositions.length ? basedPositions.length : fingers.length); i++) {
+    if (!fingers[i]) continue
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(fingers[i].x, fingers[i].y, 10, 0, Math.PI * 2);
+    ctx.fill()
 
-  //   ctx.fillStyle = 'white';
-  //   ctx.font = '20px Arial';
-  //   ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
-  // }
+    ctx.fillStyle = 'white';
+    ctx.font = '20px Arial';
+    ctx.fillText(fingers[i].index, fingers[i].x, fingers[i].y);
+  }
 
   if (basedPositions.length > 2) {
     fingers.sort((a, b) => a.index - b.index).reverse()
     for (let i = 0; i < (fingers.length < basedPositions.length ? fingers.length : basedPositions.length); i++) {
-      if (fingers[i].y > basedPositions[i].y + 10) {
-        let key = findClosestKey(keyboardPositions, fingers[i])
+      if (fingers[i].y > basedPositions[i].y - 10) {
+        let filteredKb = Object.fromEntries(Object.entries(keyboardPositions).filter(([k, value]) => fingers[i].y < value.y + 6 && fingers[i].y > value.y - 6))
+        console.log(filteredKb)
+        let key = findClosestKey(filteredKb, fingers[i])
         if (key == undefined) {
           console.log("key not found")
           continue
         }
-        console.log()
-        if (!basedPositions[i].isDown) {
-          outputHeading.innerText += key
-          console.log(key + " is down")
-          console.log("Finger: " + JSON.stringify(fingers[i]))
-          // console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
-          // console.log("Key position: " + keyboardPositions[key].x + " " + keyboardPositions[key].y)
-          basedPositions[i].isDown = true
+        console.log(key)
+        console.log("moved down")
+        console.log(fingers[i].x, keyboardPositions[key].x, "x")
+        console.log(fingers[i].y, keyboardPositions[key].y, "y")
+        if (fingers[i].x + fingers[i].y < keyboardPositions[key].x + keyboardPositions[key].y + 5 && fingers[i].x + fingers[i].y > keyboardPositions[key].x + keyboardPositions[key].y - 5) {
+
+          console.log()
+          if (!basedPositions[i].isDown) {
+            outputHeading.innerText += key
+            console.log(key + " is down")
+            console.log("Finger: " + JSON.stringify(fingers[i]))
+            // console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
+            // console.log("Key position: " + keyboardPositions[key].x + " " + keyboardPositions[key].y)
+            basedPositions[i].isDown = true
+          }
         }
       }
       else {
