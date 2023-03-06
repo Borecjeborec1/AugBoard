@@ -24,15 +24,18 @@ let paperColor = localStorage.getItem("paperColor") ? JSON.parse(localStorage.ge
 let basedPositions = []
 let canGetBase = false
 let keyboardPositions = { test: "test" }
-
+let clickedPos = {}
 canvas.addEventListener("click", (e) => {
   console.log("paper color: " + paperColor)
   console.log("clicked color: " + ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data)
   paperColor = ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data
+  clickedPos.x = e.offsetX
+  clickedPos.y = e.offsetY
   localStorage.setItem("paperColor", JSON.stringify(paperColor))
   setTimeout(() => {
     canGetBase = true
   }, 500)
+
 })
 
 function mainEffect() {
@@ -42,23 +45,33 @@ function mainEffect() {
 
   let paper = []
   let isNext = 0
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < data.length; i += 4) {
-    const pixelColor = [data[i], data[i + 1], data[i + 2]];
-    if (colorDiff(paperColor, pixelColor) < Math.pow(COLOR_TRESHOLD + isNext * 20, 2)) {
-      paper.push({ x: (i / 4) % canvas.width, y: Math.floor((i / 4) / canvas.width) });
-      isNext = 1
-      continue
-    }
 
-    isNext = 0
+  if (paperColor.length > 0) {
+    const yMin = Math.max(clickedPos.y - 50, 0);
+    const yMax = Math.min(clickedPos.y + 50, canvas.height);
+    const { data } = ctx.getImageData(0, yMin, canvas.width, yMax - yMin);
+    for (let i = 0; i < data.length; i += 4) {
+      const pixelColor = [data[i], data[i + 1], data[i + 2]];
+      const y = Math.floor((i / 4) / canvas.width) + yMin;
+      // if (colorDiff(paperColor, pixelColor) < Math.pow(COLOR_TRESHOLD + isNext * 20, 2)) {
+      if (
+        Math.abs(data[i] - paperColor[0]) < (30 + isNext * 20) &&
+        Math.abs(data[i + 1] - paperColor[1]) < (30 + isNext * 20) &&
+        Math.abs(data[i + 2] - paperColor[2]) < (30 + isNext * 20)
+      ) {
+        paper.push({ x: (i / 4) % canvas.width, y });
+        isNext = 1
+        continue
+      }
+
+      isNext = 0
+    }
   }
 
   if (paper.length > 5000) {
     console.log("too many color")
     return requestAnimationFrame(mainEffect)
   }
-
 
   let ys = paper.map(p => p.y)
   let avgY = ys.reduce((a, b) => a + b, 0) / ys.length
@@ -111,7 +124,7 @@ function mainEffect() {
         console.log(fingers[i].y, keyboardPositions[key].y, "y")
         if (fingers[i].x + fingers[i].y < keyboardPositions[key].x + keyboardPositions[key].y + 5 && fingers[i].x + fingers[i].y > keyboardPositions[key].x + keyboardPositions[key].y - 5) {
           if (!basedPositions[i].isDown) {
-            outputHeading.innerText += key
+            // outputHeading.innerText += key
             console.log(key + " is down")
             console.log("Finger: " + JSON.stringify(fingers[i]))
             // console.log("Finger positions: " + fingers[i].x + " " + fingers[i].y)
